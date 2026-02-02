@@ -17,7 +17,7 @@ const App: React.FC = () => {
   const fetchTodos = (): void => {
     getTodos()
     .then(({ data: { todos } }: ITodo[] | any) => setTodos(todos))
-    .catch((err: Error) => console.log(err))
+    .catch((err: Error) => console.error(err))
   }
 
  const handleSaveTodo = (e: React.FormEvent, formData: ITodo): void => {
@@ -29,7 +29,7 @@ const App: React.FC = () => {
     }
     setTodos(data.todos)
   })
-  .catch((err) => console.log(err))
+  .catch((err) => console.error(err))
 }
 
   const handleUpdateTodo = (todo: ITodo): void => {
@@ -40,7 +40,7 @@ const App: React.FC = () => {
         }
         setTodos(data.todos)
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.error(err))
   }
 
   const handleDeleteTodo = (_id: string): void => {
@@ -51,7 +51,7 @@ const App: React.FC = () => {
         }
         setTodos(data.todos)
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.error(err))
   }
 
   const filteredTodos = todos.filter(todo => {

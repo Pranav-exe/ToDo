@@ -1,0 +1,26 @@
+{
+  "name": "todo",
+  "version": "1.0.0",
+  "description": "A modern, full-stack todo application built with the MERN stack featuring a sleek dark theme and intuitive user interface.",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run start --prefix server\" \"npm run start --prefix client\"",
+    "install-all": "npm install && npm install --prefix client && npm install --prefix server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pranav-exe/ToDo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Pranav-exe/ToDo/issues"
+  },
+  "homepage": "https://github.com/Pranav-exe/ToDo#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

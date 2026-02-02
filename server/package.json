@@ -1,5 +1,5 @@
 {
-  "name": "fullstack-typescript-node",
+  "name": "todo-server",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -8,8 +8,8 @@
     "start": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\""
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Pranav Sharma",
+
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
