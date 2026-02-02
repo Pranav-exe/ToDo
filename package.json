@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm run start --prefix server\" \"npm run start --prefix client\"",
-    "install-all": "npm install && npm install --prefix client && npm install --prefix server",
+   "install-all": "npm install --legacy-peer-deps && npm install --legacy-peer-deps --prefix client && npm install --legacy-peer-deps --prefix server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
