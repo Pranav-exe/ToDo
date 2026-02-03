@@ -34,51 +34,39 @@ A modern, full-stack todo application built with the MERN stack featuring a slee
 
 ### Setup
 
+#### Option A: Docker (Recommended)
+This is the easiest way to get the app running with a professional multi-stage build setup.
+
 1. **Clone the repository**
    ```bash
    git clone https://github.com/Pranav-exe/Todo.git
    cd Todo
    ```
 
-2. **Install dependencies**
-   
-   For the server:
+2. **Configure environment variables**
+   Create a `.env` file in the `server` directory (see `server/.env.example`).
+
+3. **Start the application**
    ```bash
-   cd server
-   npm install
-   ```
-   
-   For the client:
-   ```bash
-   cd client
-   npm install --legacy-peer-deps
+   docker compose up --build
    ```
 
-3. **Configure environment variables**
-   
-   Create a `.env` file in the server directory:
-   ```env
-   MONGODB_URI=your_mongodb_connection_string
-   PORT=5000
+4. **Access the application**
+   - Frontend: `http://localhost:3000`
+   - Backend API: `http://localhost:4000`
+
+#### Option B: Manual Setup
+(For development without Docker)
+
+1. **Install dependencies**
+   ```bash
+   npm run install-all # From root
    ```
 
-4. **Start the application**
-   
-   Start the server:
+2. **Start the application**
    ```bash
-   cd server
-   npm start
+   npm start # From root
    ```
-   
-   Start the client (in a new terminal):
-   ```bash
-   cd client
-   npm start
-   ```
-
-5. **Access the application**
-   
-   Open your browser and navigate to `http://localhost:3000`
 
 ## 📁 Project Structure
 

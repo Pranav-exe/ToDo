@@ -2,7 +2,6 @@
   "name": "todo",
   "version": "1.0.0",
   "description": "A modern, full-stack todo application built with the MERN stack featuring a sleek dark theme and intuitive user interface.",
-  "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm run start --prefix server\" \"npm run start --prefix client\"",
    "install-all": "npm install --legacy-peer-deps && npm install --legacy-peer-deps --prefix client && npm install --legacy-peer-deps --prefix server",
