@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
+
 type FilterType = 'all' | 'active' | 'completed';
 
 interface Props {

@@ -1,67 +1,95 @@
-import React, { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { FiLayers } from 'react-icons/fi'
-import TodoItem from './components/TodoItem'
-import AddTodo from './components/AddTodo'
-import FilterTabs from './components/FilterTabs'
-import { getTodos, addTodo, updateTodo, deleteTodo } from './API'
+import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { FiLayers } from "react-icons/fi";
+import TodoItem from "./Components/TodoItem";
+import AddTodo from "./Components/AddTodo";
+import FilterTabs from "./Components/FilterTabs";
+import { getTodos, addTodo, updateTodo, deleteTodo } from "./API";
+import { ITodo } from "./Types/Type";
 
 const App: React.FC = () => {
-  const [todos, setTodos] = useState<ITodo[]>([])
-  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
+  const [todos, setTodos] = useState<ITodo[]>([]);
+  const [filter, setFilter] = useState<"all" | "active" | "completed">("all");
+  const [editingTodo, setEditingTodo] = useState<ITodo | null>(null);
 
+  // ------------------- Fetch Todos -------------------
   useEffect(() => {
-    fetchTodos()
-  }, [])
+    fetchTodos();
+  }, []);
 
-  const fetchTodos = (): void => {
-    getTodos()
-    .then(({ data: { todos } }: ITodo[] | any) => setTodos(todos))
-    .catch((err: Error) => console.error(err))
-  }
-
- const handleSaveTodo = (e: React.FormEvent, formData: ITodo): void => {
-   e.preventDefault()
-   addTodo(formData)
-   .then(({ status, data }) => {
-    if (status !== 201) {
-      throw new Error('Error! Todo not saved')
+  const fetchTodos = async (): Promise<void> => {
+    try {
+      const { data } = await getTodos();
+      setTodos(data.todos);
+    } catch (err) {
+      console.error(err);
     }
-    setTodos(data.todos)
-  })
-  .catch((err) => console.error(err))
-}
+  };
 
-  const handleUpdateTodo = (todo: ITodo): void => {
-    updateTodo(todo)
-    .then(({ status, data }) => {
-        if (status !== 200) {
-          throw new Error('Error! Todo not updated')
-        }
-        setTodos(data.todos)
-      })
-      .catch((err) => console.error(err))
-  }
+  // ------------------- Add / Edit Todo -------------------
+  const handleSaveTodo = async (
+    e: React.FormEvent,
+    formData: Omit<ITodo, "_id" | "createdAt" | "updatedAt"> & Partial<{ _id: string }>
+  ) => {
+    e.preventDefault();
+    try {
+      if (editingTodo) {
+        // --- Update existing ---
+        const updated = { ...editingTodo, ...formData };
 
-  const handleDeleteTodo = (_id: string): void => {
-    deleteTodo(_id)
-    .then(({ status, data }) => {
-        if (status !== 200) {
-          throw new Error('Error! Todo not deleted')
-        }
-        setTodos(data.todos)
-      })
-      .catch((err) => console.error(err))
-  }
+        // Call backend to update
+        const { status } = await updateTodo(updated);
+        if (status !== 200) throw new Error("Error! Todo not updated");
 
-  const filteredTodos = todos.filter(todo => {
-    if (filter === 'active') return !todo.status
-    if (filter === 'completed') return todo.status
-    return true
-  })
+        // Update todos locally in state
+        setTodos((prev) =>
+          prev.map((todo) => (todo._id === updated._id ? updated : todo))
+        );
+
+        setEditingTodo(null); // Clear edit mode
+      } else {
+        // --- Add new ---
+        const { status, data } = await addTodo(formData);
+        if (status !== 201) throw new Error("Error! Todo not saved");
+        setTodos(data.todos);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // ------------------- Toggle Complete -------------------
+  const handleToggleTodo = async (todo: ITodo): Promise<void> => {
+    try {
+      const updated = { ...todo, status: !todo.status };
+      const { status, data } = await updateTodo(updated);
+      if (status !== 200) throw new Error("Error! Todo not updated");
+      setTodos(data.todos);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // ------------------- Delete Todo -------------------
+  const handleDeleteTodo = async (_id: string): Promise<void> => {
+    try {
+      const { status, data } = await deleteTodo(_id);
+      if (status !== 200) throw new Error("Error! Todo not deleted");
+      setTodos(data.todos);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // ------------------- Filtered Todos -------------------
+  const filteredTodos = todos.filter((todo) => {
+    if (filter === "active") return !todo.status;
+    if (filter === "completed") return todo.status;
+    return true;
+  });
 
   return (
-    <main className='App min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto'>
+    <main className="App min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -75,8 +103,12 @@ const App: React.FC = () => {
         </p>
       </motion.div>
 
-      <AddTodo saveTodo={handleSaveTodo} />
-      
+      <AddTodo
+        saveTodo={handleSaveTodo}
+        editingTodo={editingTodo} // Pass edit info to form
+        cancelEdit={() => setEditingTodo(null)}
+      />
+
       <FilterTabs filter={filter} setFilter={setFilter} />
 
       <div className="space-y-4">
@@ -85,26 +117,30 @@ const App: React.FC = () => {
             filteredTodos.map((todo: ITodo) => (
               <TodoItem
                 key={todo._id}
-                updateTodo={handleUpdateTodo}
-                deleteTodo={handleDeleteTodo}
                 todo={todo}
+                updateTodo={handleToggleTodo}    // toggle complete
+                deleteTodo={handleDeleteTodo}    // delete task
+                startEditing={setEditingTodo}
               />
             ))
           ) : (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="flex flex-col items-center justify-center py-12 text-slate-500"
             >
-              {(FiLayers as any)({ className: "w-12 h-12 mb-4 opacity-50" })}
+              {(() => {
+                const Icon = FiLayers as React.FC<React.SVGProps<SVGSVGElement>>;
+                return <Icon className="w-12 h-12 mb-4 opacity-50" />;
+              })()}
               <p className="text-lg">No tasks found</p>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
     </main>
-  )
-}
+  );
+};
 
-export default App
+export default App;

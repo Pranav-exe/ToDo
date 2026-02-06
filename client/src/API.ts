@@ -1,63 +1,46 @@
-import axios, { AxiosResponse } from 'axios'
+// client/src/api.ts
+import axios, { AxiosResponse } from "axios";
+import { ITodo, ApiDataType } from "./Types/Type";
 
-const baseUrl: string = 'http://localhost:4000'
+// Base URL from environment variable (Docker / local aware)
+const baseUrl = process.env.REACT_APP_BASE_URL;
 
+if (!baseUrl) {
+  throw new Error("REACT_APP_BASE_URL is not defined");
+}
+
+// ---------------------- API FUNCTIONS ----------------------
+
+// Get all todos
 export const getTodos = async (): Promise<AxiosResponse<ApiDataType>> => {
-  try {
-    const todos: AxiosResponse<ApiDataType> = await axios.get(
-      baseUrl + '/todos'
-    )
-    return todos
-  } catch (error) {
-    throw new Error(error as string)
-  }
-}
+  return axios.get<ApiDataType>(`${baseUrl}/todos`);
+};
 
+// Add a new todo
 export const addTodo = async (
-  formData: ITodo
+  formData: Omit<ITodo, "_id" | "createdAt" | "updatedAt">, // client doesn't provide _id or timestamps
 ): Promise<AxiosResponse<ApiDataType>> => {
-  try {
-    const todo: Omit<ITodo, '_id'> = {
-      name: formData.name,
-      description: formData.description,
-      status: false,
-    }
-    const saveTodo: AxiosResponse<ApiDataType> = await axios.post(
-      baseUrl + '/add-todo',
-      todo
-    )
-    return saveTodo
-  } catch (error) {
-    throw new Error(error as string)
-  }
-}
+  const todo = {
+    name: formData.name,
+    description: formData.description,
+    status: false, // default new todo as incomplete
+  };
 
+  return axios.post<ApiDataType>(`${baseUrl}/add-todo`, todo);
+};
+
+// Update a todo (mark as done)
 export const updateTodo = async (
-  todo: ITodo
+  todo: ITodo,
 ): Promise<AxiosResponse<ApiDataType>> => {
-  try {
-    const todoUpdate: Pick<ITodo, 'status'> = {
-      status: true,
-    }
-    const updatedTodo: AxiosResponse<ApiDataType> = await axios.put(
-      `${baseUrl}/edit-todo/${todo._id}`,
-      todoUpdate
-    )
-    return updatedTodo
-  } catch (error) {
-    throw new Error(error as string)
-  }
-}
+  return axios.put<ApiDataType>(`${baseUrl}/edit-todo/${todo._id}`, {
+    status: true,
+  });
+};
 
+// Delete a todo
 export const deleteTodo = async (
-  _id: string
+  _id: string,
 ): Promise<AxiosResponse<ApiDataType>> => {
-  try {
-    const deletedTodo: AxiosResponse<ApiDataType> = await axios.delete(
-      `${baseUrl}/delete-todo/${_id}`
-    )
-    return deletedTodo
-  } catch (error) {
-    throw new Error(error as string)
-  }
-}
+  return axios.delete<ApiDataType>(`${baseUrl}/delete-todo/${_id}`);
+};
