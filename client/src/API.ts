@@ -3,11 +3,8 @@ import axios, { AxiosResponse } from "axios";
 import { ITodo, ApiDataType } from "./Types/Type";
 
 // Base URL from environment variable (Docker / local aware)
-const baseUrl = process.env.REACT_APP_BASE_URL;
+const baseUrl = "/api";
 
-if (!baseUrl) {
-  throw new Error("REACT_APP_BASE_URL is not defined");
-}
 
 // ---------------------- API FUNCTIONS ----------------------
 
@@ -33,9 +30,12 @@ export const addTodo = async (
 export const updateTodo = async (
   todo: ITodo,
 ): Promise<AxiosResponse<ApiDataType>> => {
-  return axios.put<ApiDataType>(`${baseUrl}/edit-todo/${todo._id}`, {
-    status: true,
-  });
+  const body = {
+    name: todo.name,
+    description: todo.description,
+    status: todo.status,
+  };
+  return axios.put<ApiDataType>(`${baseUrl}/edit-todo/${todo._id}`, body);
 };
 
 // Delete a todo

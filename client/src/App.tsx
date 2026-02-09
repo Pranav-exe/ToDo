@@ -35,16 +35,14 @@ const App: React.FC = () => {
     try {
       if (editingTodo) {
         // --- Update existing ---
-        const updated = { ...editingTodo, ...formData };
+        const updated = { ...editingTodo, ...formData, status: false };
 
         // Call backend to update
-        const { status } = await updateTodo(updated);
+        const { status, data } = await updateTodo(updated);
         if (status !== 200) throw new Error("Error! Todo not updated");
 
-        // Update todos locally in state
-        setTodos((prev) =>
-          prev.map((todo) => (todo._id === updated._id ? updated : todo))
-        );
+        // Sync state with server response
+        setTodos(data.todos);
 
         setEditingTodo(null); // Clear edit mode
       } else {
@@ -112,7 +110,7 @@ const App: React.FC = () => {
       <FilterTabs filter={filter} setFilter={setFilter} />
 
       <div className="space-y-4">
-        <AnimatePresence exitBeforeEnter>
+        <AnimatePresence mode="wait">
           {filteredTodos.length > 0 ? (
             filteredTodos.map((todo: ITodo) => (
               <TodoItem
@@ -130,10 +128,7 @@ const App: React.FC = () => {
               exit={{ opacity: 0 }}
               className="flex flex-col items-center justify-center py-12 text-slate-500"
             >
-              {(() => {
-                const Icon = FiLayers as React.FC<React.SVGProps<SVGSVGElement>>;
-                return <Icon className="w-12 h-12 mb-4 opacity-50" />;
-              })()}
+              {(FiLayers as any)({ className: "w-12 h-12 mb-4 opacity-50" })}
               <p className="text-lg">No tasks found</p>
             </motion.div>
           )}

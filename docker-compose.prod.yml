@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      target: production
+    image: pranavsharrma/todo-backend:latest
+    container_name: todo-backend
+    restart: unless-stopped
+    env_file:
+      - ./server/.env
+
+  frontend:
+    build:
+      context: ./Client
+      dockerfile: Dockerfile
+      target: production
+    image: pranavsharrma/todo-frontend:latest
+    container_name: todo-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy

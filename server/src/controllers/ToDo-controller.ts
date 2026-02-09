@@ -60,7 +60,7 @@ const updateTodo = async (req: Request, res: Response): Promise<void> => {
 // Delete a todo
 const deleteTodo = async (req: Request, res: Response): Promise<void> => {
   try {
-    const deletedTodo: ITodoDocument | null = await Todo.findByIdAndRemove(
+    const deletedTodo: ITodoDocument | null = await Todo.findByIdAndDelete(
       req.params.id,
     );
     const allTodos: ITodoDocument[] = await Todo.find();
