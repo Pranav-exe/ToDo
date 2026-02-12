@@ -9,7 +9,7 @@ import { ITodo } from "./Types/Type";
 
 const App: React.FC = () => {
   const [todos, setTodos] = useState<ITodo[]>([]);
-  const [filter, setFilter] = useState<"all" | "active" | "completed">("all");
+  const [filter, setFilter] = useState<"all" | "active" | "completed">("active");
   const [editingTodo, setEditingTodo] = useState<ITodo | null>(null);
 
   // ------------------- Fetch Todos -------------------
