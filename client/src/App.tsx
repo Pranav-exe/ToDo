@@ -5,7 +5,7 @@ import TodoItem from "./components/TodoItem";
 import AddTodo from "./components/AddTodo";
 import FilterTabs from "./components/FilterTabs";
 import { getTodos, addTodo, updateTodo, deleteTodo } from "./API";
-import { ITodo } from "./types/Type";
+import { ITodo } from "./types/type";
 
 const App: React.FC = () => {
   const [todos, setTodos] = useState<ITodo[]>([]);

@@ -1,4 +1,4 @@
-// client/src/types/Type.ts
+// client/src/types/type.ts
 
 export interface ITodo {
   _id: string;
