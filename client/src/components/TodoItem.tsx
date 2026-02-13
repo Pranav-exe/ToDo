@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { FiCheck, FiTrash2 } from 'react-icons/fi'
-import { ITodo, TodoProps } from '../Types/Type'
+import { ITodo, TodoProps } from '../types/Type'
 type Props = TodoProps & {
   updateTodo: (todo: ITodo) => void
   deleteTodo: (_id: string) => void

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FiPlus } from 'react-icons/fi'
-import { ITodo } from '../Types/Type'
+import { ITodo } from '../types/Type'
 
 type Props = {
   saveTodo: (e: React.FormEvent, formData: Omit<ITodo, "_id" | "createdAt" | "updatedAt"> & Partial<{ _id: string }>) => void

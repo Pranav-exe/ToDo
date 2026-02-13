@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FiLayers } from "react-icons/fi";
-import TodoItem from "./Components/TodoItem";
-import AddTodo from "./Components/AddTodo";
-import FilterTabs from "./Components/FilterTabs";
+import TodoItem from "./components/TodoItem";
+import AddTodo from "./components/AddTodo";
+import FilterTabs from "./components/FilterTabs";
 import { getTodos, addTodo, updateTodo, deleteTodo } from "./API";
-import { ITodo } from "./Types/Type";
+import { ITodo } from "./types/Type";
 
 const App: React.FC = () => {
   const [todos, setTodos] = useState<ITodo[]>([]);

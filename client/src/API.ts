@@ -1,10 +1,9 @@
 // client/src/api.ts
 import axios, { AxiosResponse } from "axios";
-import { ITodo, ApiDataType } from "./Types/Type";
+import { ITodo, ApiDataType } from "./types/Type";
 
 // Base URL from environment variable (Docker / local aware)
 const baseUrl = "/api";
-
 
 // ---------------------- API FUNCTIONS ----------------------
 
